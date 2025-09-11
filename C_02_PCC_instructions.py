@@ -22,27 +22,29 @@ def instructions():
     print(make_statement("Instructions", "{}"))
 
     print('''This program will ask you for... 
-    - The name of the pizza shop you have 
+    - The name of the tech shop you have 
     - The title of your employees
     - The amount of each employee type (must be greater than 0)
     - The amount of hours each employee type works (must be greater than 0) 
     - The wages of that employee type (must be greater than $23.50)
-    - Whether or not you have utility expenses (if you have 
-      utility expenses, it will ask you what they are).
-    - The name of your pizza
-    - How much you sell each pizza for
-    - How much it costs to make each pizza (must be less than the sell price)
+    - Whether or not you have weekly expenses (if you have 
+      weekly expenses, it will ask you what they are).
+    - The name of your technology product
+    - How much you sell each piece technology for
+    - How much it costs to make each technology item (must be less than the sell price)
     - Type 'xxx' into the name input when you're done with a section to move on to the next section.
     - You must have at least one entry for each section before moving on to the next 
 
 
-The program outputs an itemised list of the employee and utility 
+The program outputs an itemised list of the employee and weekly 
 expenses (which includes the subtotals for these expenses). It also
-outputs the profit you make per pizza and how many pizzas you need to 
-sell on average, minimum, and maximum, to break even (rounded up).
+outputs the profit you make per piece of technology sold and how many 
+pieces of technology you need to sell on average, minimum, and 
+maximum, to break even (rounded up).
 
 The data will then be written to a text file which has the 
-same name as your product and today's date.
+same name as your shop name and today's date. (Provided that
+the shop name is less than 19 characters long)
 
     ''')
 
@@ -58,3 +60,4 @@ if want_instructions == "yes":
 
 print()
 print(" program continues")
+
