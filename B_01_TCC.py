@@ -34,9 +34,9 @@ def instructions():
     print('''This program will ask you for... 
     - The name of the tech shop you have 
     - The title of your employees
-    - The amount of each employee type (must be greater than 0)
-    - The amount of hours each employee type works (must be greater than 0) 
-    - The wages of that employee type (must be greater than $23.50)
+    - The amount of each employee type (must be greater than 0 and less than 10000)
+    - The amount of hours each employee type works (must be greater than 0 and less than 70) 
+    - The wages of that employee type (must be greater than $23.50 and less than $100000)
     - Whether or not you have weekly expenses (if you have 
       weekly expenses, it will ask you what they are).
     - The name of your technology product
@@ -499,4 +499,5 @@ text_file = open(write_to, "w+")
 # write item to file
 for item in to_write:
     text_file.write(item)
+
     text_file.write("\n")
