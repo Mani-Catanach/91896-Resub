@@ -31,12 +31,13 @@ def instructions():
     """Displays instructions"""
     print(make_statement("Instructions", "{}"))
 
+    print("The program is intended for relatively small shops")
     print('''This program will ask you for... 
     - The name of the tech shop you have 
     - The title of your employees
-    - The amount of each employee type (must be greater than 0 and less than 10000)
+    - The amount of each employee type (must be greater than 0 and less than 11)
     - The amount of hours each employee type works (must be greater than 0 and less than 70) 
-    - The wages of that employee type (must be greater than $23.50 and less than $100000)
+    - The wages of that employee type (must be greater than $23.50 and less than 1000)
     - Whether or not you have weekly expenses (if you have 
       weekly expenses, it will ask you what they are).
     - The name of your technology product
@@ -70,7 +71,7 @@ def not_blank(question):
             print("Sorry, this can't be blank.")
 
 
-def num_check(question, num_type="float", exit_code=None):
+def num_check(question, num_type="float", upper_value=1000, lower_value=23.50, prompt_type=""):
     """Checks that response is a float / integer more than zero"""
 
     if num_type == "float":
@@ -78,27 +79,44 @@ def num_check(question, num_type="float", exit_code=None):
     else:
         error = "Please enter an integer more than 0."
 
+    if prompt_type == "cost":
+        dollar = "$"
+    else:
+        dollar = ""
+
     while True:
 
         response = input(question)
-
-        # check for exit code and return it if entered
-        if response == exit_code:
-            return response
 
         # check datatype is correct and that number
         # is more than zero
         try:
 
-            if num_type == "float":
+            # checks for input type
+            if num_type == "float" :
                 response = float(response)
+
             else:
                 response = int(response)
 
-            if response > 0:
+            # checks user response is within bounds
+            if response > upper_value:
+                print(f"Your value is too high, it should not be higher "
+                      f"than {upper_value} for this prompt")
+
+            elif response < lower_value:
+                print(f"Your value is too low, it should not be lower "
+                      f"than {dollar}{lower_value} for this prompt")
+
+            # does not return response if input is invalid or not in bounds
+            if response > 0 and lower_value <= response <= upper_value:
                 return response
-            else:
+
+            elif response <= 0:
                 print(error)
+
+            else:
+                continue
 
         except ValueError:
             print(error)
@@ -146,7 +164,8 @@ def get_expenses(exp_type, how_many=10):
             elif util_name == "xxx":
                 break
 
-            util_cost = num_check("Weekly Expense Cost: ", "float")
+            util_cost = num_check("Weekly Expense Cost: ", "float",1000000,
+                                  0,"cost")
 
             all_weekly.append(util_name)
             all_weekly_cost.append(util_cost)
@@ -168,10 +187,11 @@ def get_expenses(exp_type, how_many=10):
             elif employee_title == "xxx":
                 break
 
-            quantity_employee = num_check("Employees of this type: ", "integer")
+            quantity_employee = num_check("Employees of this type: ", "integer",10,
+                                          0)
 
             hours = num_check(f"Hours per week? <enter for {how_many}>: ",
-                              "integer", "")
+                              "integer", 70,0)
 
             # Allow users to push <enter> to default to number of items being made
             if hours == "":
@@ -180,24 +200,8 @@ def get_expenses(exp_type, how_many=10):
             how_much_question = "Wages of title? $"
 
             # Get price for item (question customised depending on expense type).
-            employee_wage = num_check(how_much_question, "float")
+            employee_wage = num_check(how_much_question, "float",1000,23.50,"cost")
             print()
-
-            # loop restarts for illegal/unethical inputs
-            if employee_wage < 23.50 or employee_wage > 100000:
-                print("You cannot pay employees less than minimum wage ($23.50) or more than a completely "
-                      "ludicrous amount ($10000). Make a new employee type")
-                print()
-                continue
-
-            elif quantity_employee > 10000:
-                print("You should not be employing more than 10000 employees of a certain type."
-                      "Make a new employee type")
-
-            elif hours > 70:
-                print("You cannot have an employee work over 70 hours a week. Make a new employee type")
-                print()
-                continue
 
             all_emp.append(employee_title)
             all_amount.append(quantity_employee)
@@ -303,11 +307,6 @@ def currency(x):
     return "${:.2f}".format(x)
 
 
-def round_up(amount, round_val):
-    """Rounds amount to desired hole number"""
-    return int(math.ceil(amount / round_val)) * round_val
-
-
 def clean_filename(raw_filename):
     """Check filename has not illegal characters and is not too long"""
 
@@ -325,7 +324,7 @@ def clean_filename(raw_filename):
             valid_filename = False
             error = ("Oops - your product name / filename is too long.  \n"
                      "Please provide an alternate filename (<= 19 characters) \n"
-                     "or press <enter> to default to PCC_yyyy_mm_ddd")
+                     "or press <enter> to default to TCC_yyyy_mm_ddd")
 
         # iterate through filename and check for invalid characters
         for letter in raw_filename:
@@ -334,7 +333,7 @@ def clean_filename(raw_filename):
                 error = ("I can't use the product name / proposed filename \n"
                          "as it has illegal characters.  Please \n"
                          "enter an alternate name for the first part \n"
-                         "of the file or press <enter> to default to PCC_yyyy_mm_dd")
+                         "of the file or press <enter> to default to TCC_yyyy_mm_dd")
                 break
 
         if valid_filename is False:
@@ -346,7 +345,7 @@ def clean_filename(raw_filename):
 
             # put in default filename if users press <enter>
             if raw_filename == "":
-                raw_filename = "BCC"
+                raw_filename = "TCC"
 
         else:
             return raw_filename
@@ -499,5 +498,4 @@ text_file = open(write_to, "w+")
 # write item to file
 for item in to_write:
     text_file.write(item)
-
     text_file.write("\n")
